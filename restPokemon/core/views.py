@@ -24,7 +24,7 @@ def get_pokemon(request):
                 
                 text = r.json()
 
-                if 'name' in text: 
+                if 'name' in text : 
                     image_url = 'http://www.pokestadium.com/sprites/xy/'+str(text['name'])+'.gif'
 
                     abilities = {}

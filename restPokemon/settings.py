@@ -13,7 +13,10 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+# initial base_dir
+# BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+# heroku base_dir
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 
 # Quick-start development settings - unsuitable for production
@@ -25,7 +28,8 @@ SECRET_KEY = 'jn2p6%=_h3ue_e!xe*6p7(7uqe%+fz)$-8e7s%jp4#1(#+*vql'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+# ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [‘pokemon.herokuapp.com’]
 
 Temp_Path = os.path.realpath('.')
 
@@ -94,6 +98,10 @@ DATABASES = {
     }
 }
 
+import dj_database_url
+
+DATABASES[‘default’] = dj_database_url.config()
+
 
 # Password validation
 # https://docs.djangoproject.com/en/1.10/ref/settings/#auth-password-validators
@@ -132,3 +140,5 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
 STATIC_URL = '/static/'
+
+SECURE_PROXY_SSL_HEADER = (‘HTTP_X_FORWARDED_PROTO’, ‘https’)
