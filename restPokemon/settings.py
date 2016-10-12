@@ -29,7 +29,7 @@ SECRET_KEY = 'jn2p6%=_h3ue_e!xe*6p7(7uqe%+fz)$-8e7s%jp4#1(#+*vql'
 DEBUG = True
 
 # ALLOWED_HOSTS = []
-ALLOWED_HOSTS = [‘pokemon.herokuapp.com’]
+ALLOWED_HOSTS = ['pokemon-go-search.herokuapp.com']
 
 Temp_Path = os.path.realpath('.')
 
