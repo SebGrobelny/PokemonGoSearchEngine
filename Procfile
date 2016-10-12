@@ -1,1 +1,1 @@
-web: gunicorn restPokemon.wsgi --log-file -
+web: gunicorn myproject.wsgi --log-file -
