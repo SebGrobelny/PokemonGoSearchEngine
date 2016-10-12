@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<center><h1 style = "verdana"> <font color = "white" > Pokemon Go API Search Engine </font> </h1>
+	<form action = "/" method = "POST">
+		{% csrf_token %}
+		<input type="text" name = "input" ><br>
+		<input type = "submit" value= "Go" >
+
+	</form>
+    
+     {% if error_message %}
+     <p><strong>{{ error_message }}</strong></p>
+
+
+	{% else %}<p style="font-family:verdana;"> 
+	<strong> <font color = "black" > Name: <br> {{name}} </font> <br><br>  
+	<font color = "black"> Height: <br> {{height}} </font> <br><br> 
+	<font color = "black"> Weight: <br> {{weight}} </font> <br><br> 
+	<font color = "black" > Abilities: <br> {{abilities}} </font>  <br><br> 
+	<font color = "black" > Types: <br> {{types}} <br><br><br><br><br><br><br></font> </strong> </p></center>
+	
+	<center><img src= '{{image}}'  height="200" width="200" ></center>
+
+
+
+
+	 {%endif%}
+	
+	<style> 
+	
+	body {
+        background-image: url("http://pixelattack.net/wp/wp-content/uploads/Pok%C3%A9mon_Stadium_2.jpg ");
+} 
+
+	</style>
+{% endblock %}

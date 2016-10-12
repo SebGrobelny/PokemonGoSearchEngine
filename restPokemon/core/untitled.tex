@@ -1,0 +1,282 @@
+\documentclass[12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{titling}
+\usepackage{amsmath}
+
+\setlength{\droptitle}{-2em}
+
+\title{ECS165A HW 1 }
+\author{Sebastian Grobelny}
+\date{October 5, 2016 }
+
+
+
+
+%%%%%%%%%%%%%
+% PROBLEM 1 %
+%%%%%%%%%%%%%
+\begin{document}
+\maketitle
+\vspace{-1em}
+\begin{description}
+\item[1a ] $ $ \\
+
+Answer(model) := \Pi_{model}( \sigma _{city\ <\ 50} (Car))
+
+
+\clearpage
+\item[1b ] $ $ \\
+Answer(model) := \Pi_{model} ( \sigma _{towing\ >=\ 12,500\ AND\ highway\ <\ 20} (Pickup))
+
+
+\clearpage
+\item[1c ] $ $ \\
+CM(maker) := \Pi_{maker} ( \sigma $_{msrp\ < 25,000\ OR\ msrp\ >\ 60,000}$ (Car) \bowtie Product )
+
+
+PM(maker) := \Pi_{maker} ( \sigma _{msrp\ <\ 25,000\ OR\ msrp\ >\ 60,000} (Pickup) \bowtie Product)
+
+
+EVM(maker) := \Pi_{maker} ( \sigma $_{msrp\ <\ 25,000\ OR\ msrp\ >\ 60,000}$ (EV) \bowtie Product)
+
+
+
+Answer(maker) := CM U PM U EVM
+
+
+\clearpage
+\item[1d ] $ $ \\
+    C1(model1, msrp1) :=  \rho_{C1}(model1,msrp1)(Car)
+
+
+C2C( msrp) := \Pi_{msrp}( (Car\bowtie_{model\ !=\ model1\ AND\ msrp\ ==\ mrsp1} C1))
+
+
+P1(model1,msrp1) := \rho_{(model1,msrp1)}(Pickup)
+
+
+P2P( msrp) := \Pi_{mrsp}( Pickup \bowtie_{model != model1 AND msrp == mrsp1} P1)
+
+EV1(model1,msrp1) := \rho_{(model1,msrp1)}(EV)
+
+
+EV2EV( msrp) := \Pi_{mrsp}( EV \bowtie_{model != model1 AND msrp == mrsp1} EV1)
+
+
+C2P(msrp) := \Pi_{msrp}( (Car\bowtie_{ Car.msrp == Pickup.mrsp} Pickup))
+
+EV2P(msrp) := \Pi_{msrp} ( (EV \bowtie_{EV.msrp == Pickup.msrp} Pickup))
+
+C2EV(msrp) := \Pi_{msrp} ( (Car \bowtie_{Car.msrp == EV.msrp} EV))
+
+
+Answer(msrp) := C2C U P2P U EV2EV U C2P U EV2P U C2EV
+
+
+
+\clearpage
+\item[1e ] $ $ \\
+C1(model1,city1,highway1) := \rho_{C1}(model1,city1,highway1)(Car)
+
+
+PC1(model,city,highway) := \pi_{model, city,highway} ( Car)
+
+
+PC(model,city,highway) := \pi_{ model, city, highway} ( PC1 \bowtie_{ .45(city)+.55(highway) < .45(city1)+.55(highway1)} C1)
+
+
+MaxCar(model,city,highway) :=  PC1-PC
+
+
+P1(model1,city1,highway1):= \rho_{P1}(model1,city1,highway1)(Pickup)
+
+
+PP1(model,city,highway) := \pi_{model, city, highway} (Pickup)
+
+
+PP(model,city,highway):= \pi_{ model, city, highway} ( PP1 \bowtie_{ .45(city)+.55(highway) < .45(city1)+.55(highway1)} P1)
+
+
+MaxPickup(model,city,highway) := PP1 -PP
+
+IfPickupBigger(model,city,highway) :=\\  
+( MaxCar \bowtie_{.45(MaxCar.city)+.55(MaxCar.highway)\ <=\ .45(MaxPickup.city)+.55(MaxPickup.highway))} MaxPickup)
+
+IfCarBigger(model,city,,highway) :=\\
+( MaxCar \bowtie_{.45(MaxCar.city)+.55(MaxCar.highway)\ >=\ .45(MaxPickup.city)+.55(MaxPickup.highway))} MaxPickup)
+
+PickupMaker(maker) := \pi_{maker}(IfPickupBigger \bowtie Product) 
+
+CarMaker(maker) := \pi_{maker}(IfCarBigger \bowtie Product)
+
+FinalMaker := PickupMaker AND CarMaker
+
+
+
+
+\clearpage
+\item[1f ] $ $ \\
+
+EV(model, range, battery) := \pi_{model,\ range,\ battery}(EV)
+
+EV1(model1,range1,battery1) := \rho_{EV1} (model1,\ range1,\ battery1) (EV)
+
+MinEV(model,range,battery) := \pi_{model,range,battery}(EV \bowtie_{(range/(battery/33.1))\ <\ (range1/(battery/33.1))} EV1)
+
+MaxEV(model,range,battery) :=  EV-MinEV
+
+Then using the MaxCV relation found from the previous problem:
+
+A(model) := \pi_{model} ( MaxCV \bowtie_{.45(city)+.55(highway)\ <=\ range/(battery/33.1))} MaxEV)
+
+B(model) := \pi_{model} ( MaxCV \bowtie_{.45(city)+.55(highway)\ >=\ range/(battery/33.1))} MaxEV)
+
+Answer := A AND B
+
+
+
+
+
+
+\clearpage
+\item[1g ] $ $ \\
+C(Car) :=  \sigma _{city < 15 MPG} (Car)
+
+CP     :=              \pi_{maker}(C \bowtie Product)
+
+CV     :=               \pi_{maker}(EV \bowtie Product)
+
+Answer(Maker) := CP \bowtie CV
+
+
+\clearpage
+\item[1h ] $ $ \\
+
+C(maker,trunk) := \pi_{maker,trunk} (Car \bowtie Product)
+
+P(maker,cargo) := \pi_{maker,cargo} (Pickup \bowtie Product)
+
+P1(maker,trunk) := \rho(maker,trunk) (P)
+
+PC := P1 U C
+
+PC1 := \rho(maker1,cargo1)PC
+
+PPC1 := PC \bowtie_{PC.maker\ =\ PC1.maker\ AND\ PC.cargo\ !=\ PC1.cargo1} PC1
+
+PPC2 := \rho(maker2,cargo2,maker3,cargo3)(PPC1)
+
+NoTriplet :=\\ 
+(PPC1\\ 
+\bowtie_{PPC1.maker\ !=\ PPC2.maker2\ AND\ PPC1.maker1\ !=\ PPC2.maker3\ AND\ PPC1.cargo\ != PPC2.cargo2\ AND\ PPC1.cargo\ != PPC2.cargo3\ AND PPC1.cargo1\ !=\ PPC2.cargo2}\\
+PPC2)
+
+Answer(maker) := \Pi_{maker}(NoTriplet)
+
+
+
+
+
+
+
+
+
+\clearpage
+\end{description}
+
+
+
+%%%%%%%%%%%%%
+% PROBLEM 2 %
+%%%%%%%%%%%%%
+\begin{description}
+\item[2a ] $ $ \\
+
+\sigma_{towing\ <\ 12,000\  AND\ msrp\ >\ 25,000}(Car) = \emptyset
+
+\clearpage
+\item[2b ] $ $ \\
+
+\sigma_{range\ <\ 105}(EV) = \emptyset
+
+\clearpage
+\item[2c ] $ $ \\
+
+\sigma_{city\ >=\ 50\ AND\ (highway\ <\ 40\ OR\ msrp\ >\ 20,000)}(Car) AND \sigma_{city\ >=\ 50\ AND\ (highway\ >\ 40\ OR\ msrp\ <\ 20,000)}(Car) = \emptyset 
+
+\clearpage
+\item[2d ] $ $ \\
+
+\pi_{maker}(Pickup \bowtie Product) \bowtie \pi_{maker}(EV \bowtie Product) = \emptyset
+
+\clearpage
+\item[2e ] $ $ \\
+
+CopyProd := \rho(maker1,model1,year1)(Product)
+
+\pi_{maker}(Product \bowtie_{model\ !=\ model\ AND\ year\ ==\ year1} CopyProd) = \emptyset
+
+\clearpage
+\item[2f ] $ $ \\
+
+PMaker := Product \bowtie Pickup
+
+CMaker := Car \bowtie Product
+
+\pi_{maker} ( CMaker \bowtie_{CMaker.maker\ ==\ PMaker.maker\ AND\ CMaker.highway\ >\ PMaker.highway} PMaker)
+
+
+\clearpage
+\item[2g ] $ $ \\
+
+\pi_{Pickup.model}(Pickup \bowtie_{Pickup.highway\ >\ Car.highway\ AND\ Pickup.MSRP\ +\ .75(Pickup.MSRP)\ <\ Car.MSRP} Car) = \emptyset
+
+
+\clearpage
+\end{description}
+
+
+
+%%%%%%%%%%%%%
+% PROBLEM 3 %
+%%%%%%%%%%%%%
+\begin{description}
+\item[3a ] $ $ \\
+{P_{x}, P_{y}, P_{z}} -> V_{x}
+
+{P_{x}, P_{y}, P_{z}} -> V_{y}
+
+{P_{x}, P_{y}, P_{z}} -> V_{z}
+
+
+
+\clearpage
+\item[3b ] $ $ \\
+
+ID is a key, and { P_{x}, P_{y}, P_{z}} is a key
+
+
+
+\clearpage
+\item[3c ] $ $ \\
+
+\{P_{x}, P_{y}, P_{z}, V_{x}\}
+
+\{P_{x}, P_{y}, P_{z}, V_{y}\}
+
+\{P_{x}, P_{y}, P_{z}, V_{z}\}
+
+\clearpage
+\item[3d ] $ $ \\
+
+Since there must always be a key present in a superkey we only consider the possible subsets of {Vx, Vy, Vz} of which there are $2AND_{3}$ - 1 since we are not including the empty set. This gives us 7 subsets and since we have 2 keys we can substitute we are then left with a total of 3*7= 21 superkeys and since we already listed out 3 in 3c then there are 18 other superkeys. 
+
+
+\clearpage
+\end{description}
+
+
+
+
+\end{document}
