@@ -1,1 +1,1 @@
-web: gunicorn pokemon-go-search.wsgi --log-file -
+web: gunicorn restPokemon.wsgi --log-file -
